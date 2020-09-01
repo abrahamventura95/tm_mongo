@@ -17,7 +17,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-mongoose.connect('mongodb://localhost:27017/finance', {
+mongoose.connect('mongodb://localhost:27017/taskmanager', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
