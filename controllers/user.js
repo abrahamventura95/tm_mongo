@@ -6,14 +6,12 @@ const error_types = require('./error_types');
 
 let controller = {
     register: (req, res, next) => {
-        console.log("Register");
         User.findOne({ email: req.body.email })
             .then(data => { 
                 if (data) { //user exists
                     throw new error_types.InfoError("user already exists");
                 }
                 else { 
-                    console.log("Creating user");
                     var hash = bcrypt.hashSync(req.body.password,
                                                parseInt(
                                                    process.env.BCRYPT_ROUNDS));
@@ -33,7 +31,6 @@ let controller = {
             })
     },
     login: (req, res, next) => {
-        console.log("Login");
         User.findOne({ email: req.body.email })
         	.then(data=> {
         		if(!bcrypt.compareSync(req.body.password, data.password)){
@@ -57,7 +54,6 @@ let controller = {
         	})
     },
     getAll: (req, res, next) => {
-    	console.log('Users');
     	User.find({},{ password:0 }).then(data=>res.json(data));
     },
     get: (req, res, next) => {
