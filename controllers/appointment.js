@@ -16,9 +16,17 @@ let controller = {
             document.save().then(data => res.json({data: data})).catch(err => next(err));
         }
     },
+    search: (req, res, next) => {
+        Apmnt.find({user_id: req.user.sub, 
+                    tag: {$regex: req.param('tag'), $options: 'i'},
+                    place: {$regex: req.param('place'), $options: 'i'},
+                    topic: {$regex: req.param('topic'), $options: 'i'}})
+            .sort({created_at: 1, status: -1})
+            .then(data=>res.json(data));
+    },
     getAll: (req, res, next) => {
         Apmnt.find({user_id:req.user.sub})
-            .sort({date: -1, status: -1})
+            .sort({date: -1, status: 1})
             .then(data=>res.json(data));
     },
     get: (req, res, next) => {

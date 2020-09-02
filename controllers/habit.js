@@ -15,9 +15,14 @@ let controller = {
             document.save().then(data => res.json({data: data})).catch(err => next(err));
         }
     },
+    search: (req, res, next) => {
+        Habit.find({user_id: req.user.sub, tag: {$regex: req.param('tag'), $options: 'i'}})
+            .sort({created_at: 1, status: -1})
+            .then(data=>res.json(data));
+    },
     getAll: (req, res, next) => {
         Habit.find({user_id:req.user.sub})
-            .sort({created_at: 1})
+            .sort({created_at: 1, status: -1})
             .then(data=>res.json(data));
     },
     get: (req, res, next) => {
@@ -74,10 +79,10 @@ let controller = {
     },
     deleteDay: (req, res, next) => {
         Day.deleteOne({_id:req.param('id')})
-             .then(data=>{
+            .then(data=>{
                 res.json(data)
-             })
-             .catch(err=>{res.json(err)}) 
+            })
+            .catch(err=>{res.json(err)}) 
     }
 }
 

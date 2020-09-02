@@ -5,6 +5,7 @@ var TaskController 	= require('../controllers/task');
 
 router.post('/', auth.ensureAuthenticated, TaskController.create);
 router.get('/all', auth.ensureAuthenticated, TaskController.getAll);
+router.get('/search', auth.ensureAuthenticated, TaskController.search);
 router.get('/', auth.ensureAuthenticated, TaskController.get);
 router.put('/', auth.ensureAuthenticated, TaskController.update);
 router.delete('/', auth.ensureAuthenticated, TaskController.delete);

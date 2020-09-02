@@ -5,6 +5,7 @@ var HabitController 	= require('../controllers/habit');
 
 router.post('/', auth.ensureAuthenticated, HabitController.create);
 router.get('/all', auth.ensureAuthenticated, HabitController.getAll);
+router.get('/search', auth.ensureAuthenticated, HabitController.search);
 router.get('/', auth.ensureAuthenticated, HabitController.get);
 router.put('/', auth.ensureAuthenticated, HabitController.update);
 router.delete('/', auth.ensureAuthenticated, HabitController.delete);

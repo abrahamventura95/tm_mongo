@@ -15,6 +15,11 @@ let controller = {
             document.save().then(data => res.json({data: data})).catch(err => next(err));
         }
     },
+    search: (req, res, next) => {
+        Task.find({user_id: req.user.sub, tag: {$regex: req.param('tag'), $options: 'i'}})
+            .sort({created_at: 1, status: -1})
+            .then(data=>res.json(data));
+    },
     getAll: (req, res, next) => {
         Task.find({user_id:req.user.sub})
             .sort({date: -1, status: -1})
