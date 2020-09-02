@@ -1,5 +1,6 @@
 const Task = require('../Models/task');
 const STask = require('../Models/stask');
+const TaskC = require('../Models/taskc');
 const error_types = require('./error_types');
 
 let controller = {
@@ -28,8 +29,8 @@ let controller = {
     get: (req, res, next) => {
         STask.find({task_id:req.param('id')})
              .sort({status:  1})
-            .then(data=>{res.json(data)})
-            .catch(err=>{res.json(err)}) 
+             .then(data=>{res.json(data)})
+             .catch(err=>{res.json(err)}) 
     },
     update: (req, res, next) => {
         Task.findOne({_id:req.param('id')})
@@ -37,7 +38,18 @@ let controller = {
                 data.tag      = req.body.tag      || data.tag;
                 data.status   = req.body.status   || data.status;
                 data.priority = req.body.priority || data.priority;
-                data.save();
+                if(data.user_id == req.user.sub){
+                    data.save();                
+                    if(data.status == 0){
+                        let document = new TaskC({
+                            user_id: req.user.sub,
+                            task_id: req.param('id'),
+                            tag:     data.tag,
+                            timespent: Date.now() - data.created_at 
+                        }); 
+                        document.save();
+                    }
+                }
                 res.json(data)
             })
             .catch(err=>{res.json(err)}) 
@@ -79,6 +91,23 @@ let controller = {
                 res.json(data)
             })
             .catch(err=>{res.json(err)}) 
+    },
+    stats: (req, res, next) => {
+        TaskC.aggregate([
+                         {$match: {user_id: req.user.sub}}, 
+                         {$group: {_id: null, total : {$sum: "$timespent"}}}
+             ])
+             .then(data=>{
+                 Task.count({user_id: req.user.sub})
+                     .then(tasks =>{
+                         let stats = {
+                             numberTasks: tasks, 
+                             avgTime: data[0].total/(1000*24*60*60)
+                         };
+                         res.json(stats);
+                     });
+             })
+             .catch(err=>{res.json(err)});
     }
 }
 

@@ -12,5 +12,6 @@ router.delete('/', auth.ensureAuthenticated, TaskController.delete);
 router.post('/sub', auth.ensureAuthenticated, TaskController.createSub);
 router.put('/sub', auth.ensureAuthenticated, TaskController.updateSub);
 router.delete('/sub', auth.ensureAuthenticated, TaskController.deleteSub);
+router.get('/stats', auth.ensureAuthenticated, TaskController.stats);
 
 module.exports = router;
