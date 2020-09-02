@@ -8,6 +8,8 @@ router.get('/all', auth.ensureAuthenticated, HabitController.getAll);
 router.get('/', auth.ensureAuthenticated, HabitController.get);
 router.put('/', auth.ensureAuthenticated, HabitController.update);
 router.delete('/', auth.ensureAuthenticated, HabitController.delete);
-
+router.post('/day', auth.ensureAuthenticated, HabitController.createDay);
+router.put('/day', auth.ensureAuthenticated, HabitController.updateDay);
+router.delete('/day', auth.ensureAuthenticated, HabitController.deleteDay);
 
 module.exports = router;
